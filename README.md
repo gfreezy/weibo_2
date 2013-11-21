@@ -11,16 +11,20 @@ WeioOAuth2 is a Ruby gem that provides a wrapper for interacting with sina weibo
 3.  weibo app API secret
 
 ## Installation
-        
 I call it weibo_2 because someone else took the name weibo_oauth2.
 
-```bash
-$ gem install weibo_2
-```
+* Rails
+    Add `gem 'weibo_2'` to `Gemfile`,then run 
+
+        `bundle install`
+
+* Non-rails
+
+        $ gem install weibo_2
+
 
 ## Basic Usage
-
-The example have been moved to [here](https://github.com/simsicon/weibo_2_example). It wiil be more convenient to update.
+The example have been moved to [here](https://github.com/simsicon/weibo_2_example). It will be more convenient to update.
 
 The [example](https://github.com/simsicon/weibo_2_example) written with sinatra shows how to ask for oauth2 permission, get the token and send status with picture. It should cover basic usage in all ruby apps. You can run your own demo!
 
@@ -40,31 +44,25 @@ It should work.
     WeiboOAuth2::Config.redirect_uri = YOUR_CALLBACK_URL   
     ```
 
-    If you are developing in your localhost, you can set YOUR_CALLBACK_URL as 'http://127.0.0.1/callback' something. Then set your weibo app account's callback URL as this URL too. Weibo will call the URL using GET method, which will then enable you to retrieve the authorization code.
+    If you are developing in your localhost, you can set YOUR_CALLBACK_URL as 'http://127.0.0.1/callback' something. Then set your weibo app account's callback URL as this URL too. Weibo will call the URL using GET method, which will then enable you to retrieve the authorization code. Or you can pass the key and secret to new a client if you did not set WeiboOAuth2::Config
     
     ```ruby
     client = WeiboOAuth2::Client.new  
+    redirect_url = client.authorize_url
     ```
-    
-    Or you can pass the key and secret to new a client if you did not set WeiboOAuth2::Config
-    
-    Redirect to this URL. If user grants you permission, then you will get the authorization code.
+   
+    Redirect to this URL. If user grants you permission, then you will get the authorization code in your callback handling method. 
     
     ```ruby
-    client.authorize_url
-    ```
-    
-    In your callback handling method, you should add something like the following, 
-    
-    ```ruby
+    client = WeiboOAuth2::Client.new
     client.auth_code.get_token(params[:code])
     ```
     
-    which will give permission to your client.
+    Now you can what you want to do with the client object.
     
 2.  How to post a status with picture? (or call other interfaces)
     
-    Simply update a status
+    Simply update a status`
         
     ```ruby
     client.statuses.update(params[:status])
